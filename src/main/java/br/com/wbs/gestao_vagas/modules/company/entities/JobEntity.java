@@ -38,9 +38,4 @@ public class JobEntity {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public JobEntity(CreateJobDTO dto) {
-        this.description = dto.getDescription();
-        this.benefits = dto.getBenefits();
-        this.level = dto.getLevel();
-    }
 }
