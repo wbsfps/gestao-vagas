@@ -1,9 +1,6 @@
 package br.com.wbs.gestao_vagas.modules.candidate.controllers;
 
-import br.com.wbs.gestao_vagas.exceptions.UserFoundException;
 import br.com.wbs.gestao_vagas.modules.candidate.CandidateEntity;
-import br.com.wbs.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
-import br.com.wbs.gestao_vagas.modules.candidate.repository.CandidateRepository;
 import br.com.wbs.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.wbs.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +22,7 @@ public class CandidateController {
     @Autowired
     private ProfileCandidateUseCase profileCandidateUseCase;
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity){
         try {
             var result = this.createCandidateUseCase.execute(candidateEntity);
@@ -37,10 +34,10 @@ public class CandidateController {
 
     @GetMapping("/")
     public ResponseEntity<Object> get(HttpServletRequest request) {
-        var idCandidate = (String) request.getAttribute("candidate_id");
+        var idCandidate = request.getAttribute("candidate_id");
 
         try {
-            var profile = this.profileCandidateUseCase.execute(UUID.fromString(idCandidate));
+            var profile = this.profileCandidateUseCase.execute(UUID.fromString(idCandidate.toString()));
             return ResponseEntity.ok().body(profile);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
