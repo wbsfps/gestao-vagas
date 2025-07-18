@@ -2,6 +2,7 @@ package br.com.wbs.gestao_vagas.modules.candidate.useCases;
 
 import br.com.wbs.gestao_vagas.exceptions.JobNotFoundException;
 import br.com.wbs.gestao_vagas.exceptions.UserNotFoundException;
+import br.com.wbs.gestao_vagas.modules.candidate.repository.ApplyJobRepository;
 import br.com.wbs.gestao_vagas.modules.candidate.repository.CandidateRepository;
 import br.com.wbs.gestao_vagas.modules.company.repositories.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class ApplyJobCandidateUseCase {
     private CandidateRepository candidateRepository;
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private ApplyJobRepository applyJobRepository;
 
     // Id do Candidato
     // Id da Vaga
