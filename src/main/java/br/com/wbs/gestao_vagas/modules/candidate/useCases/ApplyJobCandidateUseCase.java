@@ -2,6 +2,7 @@ package br.com.wbs.gestao_vagas.modules.candidate.useCases;
 
 import br.com.wbs.gestao_vagas.exceptions.JobNotFoundException;
 import br.com.wbs.gestao_vagas.exceptions.UserNotFoundException;
+import br.com.wbs.gestao_vagas.modules.candidate.entity.ApplyJobEntity;
 import br.com.wbs.gestao_vagas.modules.candidate.repository.ApplyJobRepository;
 import br.com.wbs.gestao_vagas.modules.candidate.repository.CandidateRepository;
 import br.com.wbs.gestao_vagas.modules.company.repositories.JobRepository;
@@ -22,7 +23,7 @@ public class ApplyJobCandidateUseCase {
 
     // Id do Candidato
     // Id da Vaga
-    public void execute(UUID idCandidate, UUID idJob) {
+    public ApplyJobEntity execute(UUID idCandidate, UUID idJob) {
         // Validar se o candidato existe
         this.candidateRepository.findById(idCandidate).orElseThrow(UserNotFoundException::new);
 
@@ -30,5 +31,12 @@ public class ApplyJobCandidateUseCase {
         this.jobRepository.findById(idJob).orElseThrow(JobNotFoundException::new);
 
         // Candidato se inscrever da vaga
+        var applyJob = ApplyJobEntity.builder()
+                .candidateId(idCandidate)
+                .jobId(idJob).build();
+
+        applyJob = applyJobRepository.save(applyJob);
+
+        return applyJob;
     }
 }
