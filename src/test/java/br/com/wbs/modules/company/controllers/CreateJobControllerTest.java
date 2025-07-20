@@ -1,30 +1,39 @@
 package br.com.wbs.modules.company.controllers;
 
 import br.com.wbs.gestao_vagas.modules.company.dto.CreateJobDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import br.com.wbs.utils.TestUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+import java.util.UUID;
+
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@RunWith(SpringRunner.class)
 public class CreateJobControllerTest {
 
     private MockMvc mvc;
     @Autowired
     private WebApplicationContext context;
 
-    @BeforeEach
+    @Before
     public void setup(){
-        mvc = MockMvcBuilders.webAppContextSetup(context).build();
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
     }
 
     @Test
@@ -35,20 +44,13 @@ public class CreateJobControllerTest {
                 .level("LEVEL_TEST")
                         .build();
 
-        var result = mvc.perform(MockMvcRequestBuilders.post("/company/job")
+        var result = mvc.perform(MockMvcRequestBuilders.post("/company/job/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectToJson(createJobDTO))
+                .content(TestUtils.objectToJson(createJobDTO))
+                .header("Authorization", TestUtils.generateToken
+                        (UUID.fromString("9d074948-37cc-469d-bb8e-ce19c8113c00"), "JAVAGAS_@123#"))
         ).andExpect(MockMvcResultMatchers.status().isOk());
 
         System.out.println(result);
-    }
-
-    private static String objectToJson(Object obj) {
-        try {
-            final ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
