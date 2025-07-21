@@ -79,14 +79,10 @@ public class CreateJobControllerTest {
                 .level("LEVEL_TEST")
                 .build();
 
-        try {
-            mvc.perform(MockMvcRequestBuilders.post("/company/job/")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.objectToJson(createJobDTO))
-                    .header("Authorization", TestUtils.generateToken(UUID.randomUUID(), "JAVAGAS_@123#"))
-            );
-        } catch (Exception e) {
-            assertThat(e).isInstanceOf(CompanyNotFoundException.class);
-        }
+        mvc.perform(MockMvcRequestBuilders.post("/company/job/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtils.objectToJson(createJobDTO))
+                .header("Authorization", TestUtils.generateToken(UUID.randomUUID(), "JAVAGAS_@123#"))
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
